@@ -1,0 +1,1040 @@
+<title>Guide Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+
+<style>
+:root{
+  --ground:#F5F4EF; --surface:#FFFFFF; --surface-2:#EAE8DE; --surface-3:#DFDCCE;
+  --ink:#191710; --ink-2:#55503F; --ink-3:#8A8471;
+  --line:#DAD6C7; --line-2:#C6C1AD;
+  --gold:#7E610F; --gold-solid:#C39B27; --gold-soft:#F2E7C2;
+  --good:#2C6E4A; --warn:#96600A; --bad:#A63325;
+  --b5:#1F6B4A; --b45:#3E8C57; --b4:#8A8B22; --b35:#A8811A; --b3:#A9691A; --b25:#A34C22; --b2:#96302A;
+  --shadow:0 1px 2px rgba(25,23,16,.06),0 6px 18px rgba(25,23,16,.06);
+  --focus:#2E6BB8;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#121109; --surface:#1C1A13; --surface-2:#26231A; --surface-3:#332F23;
+    --ink:#F3F0E5; --ink-2:#B7B1A0; --ink-3:#847F6E;
+    --line:#312D22; --line-2:#443F30;
+    --gold:#DCBA61; --gold-solid:#CEB888; --gold-soft:#3B3320;
+    --good:#77C79A; --warn:#DFA342; --bad:#E97D6F;
+    --b5:#6FCB9B; --b45:#8FC97F; --b4:#C9C766; --b35:#DFB454; --b3:#DF9A4E; --b25:#E37B54; --b2:#E86F63;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.3);
+    --focus:#7FB0EE;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#121109; --surface:#1C1A13; --surface-2:#26231A; --surface-3:#332F23;
+  --ink:#F3F0E5; --ink-2:#B7B1A0; --ink-3:#847F6E;
+  --line:#312D22; --line-2:#443F30;
+  --gold:#DCBA61; --gold-solid:#CEB888; --gold-soft:#3B3320;
+  --good:#77C79A; --warn:#DFA342; --bad:#E97D6F;
+  --b5:#6FCB9B; --b45:#8FC97F; --b4:#C9C766; --b35:#DFB454; --b3:#DF9A4E; --b25:#E37B54; --b2:#E86F63;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.3);
+  --focus:#7FB0EE;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.5; -webkit-text-size-adjust:100%;
+}
+h1,h2,h3{font-family:Archivo,"Public Sans",sans-serif;margin:0;text-wrap:balance;letter-spacing:-.015em}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px}
+.num{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+.shell{max-width:600px;margin:0 auto;padding:0 16px 132px}
+
+/* ---- top bar ---- */
+.top{
+  position:sticky;top:0;z-index:40;background:var(--ground);
+  border-bottom:1px solid var(--line);margin:0 -16px;padding:12px 16px 10px;
+  display:flex;align-items:center;gap:12px;
+}
+.brand{display:flex;align-items:baseline;gap:8px;min-width:0}
+.brand h1{font-size:17px;font-weight:800}
+.brand .sub{font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.09em;font-weight:600;white-space:nowrap}
+.whoami{
+  margin-left:auto;display:flex;align-items:center;gap:7px;flex-shrink:0;
+  background:var(--surface);border:1px solid var(--line-2);border-radius:999px;
+  padding:5px 11px 5px 8px;font-size:13px;font-weight:600;cursor:pointer;
+}
+.whoami .dot{width:8px;height:8px;border-radius:50%;background:var(--gold-solid);flex-shrink:0}
+.whoami.unset{color:var(--ink-3)}
+.whoami.unset .dot{background:var(--line-2)}
+
+/* ---- banner ---- */
+.banner{
+  margin:12px 0 0;padding:11px 13px;border-radius:10px;font-size:13.5px;line-height:1.45;
+  border:1px solid;display:flex;gap:9px;align-items:flex-start;
+}
+.banner b{font-weight:700}
+.banner.warn{background:color-mix(in srgb,var(--warn) 12%,var(--surface));border-color:color-mix(in srgb,var(--warn) 38%,transparent);color:var(--ink)}
+.banner.bad{background:color-mix(in srgb,var(--bad) 12%,var(--surface));border-color:color-mix(in srgb,var(--bad) 40%,transparent);color:var(--ink)}
+.banner .x{margin-left:auto;background:none;border:0;color:var(--ink-3);cursor:pointer;padding:0 2px;font-size:16px;line-height:1}
+
+/* ---- tabs ---- */
+.tabs{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  background:color-mix(in srgb,var(--ground) 92%,transparent);
+  backdrop-filter:blur(12px);border-top:1px solid var(--line);
+  padding:6px 8px calc(6px + env(safe-area-inset-bottom));
+}
+.tabs-inner{max-width:600px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.tab{
+  background:none;border:0;border-radius:10px;padding:7px 2px 6px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--ink-3);
+  font-size:11px;font-weight:600;letter-spacing:.02em;
+}
+.tab svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tab[aria-selected="true"]{color:var(--ink);background:var(--surface-2)}
+.tab .cnt{
+  position:absolute;transform:translate(16px,-4px);background:var(--gold-solid);color:#1a1608;
+  font-size:9.5px;font-weight:800;border-radius:999px;padding:1px 4px;min-width:15px;text-align:center;
+}
+
+/* ---- generic ---- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.sec-label{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);
+  margin:22px 0 9px;display:flex;align-items:center;gap:8px;
+}
+.sec-label::after{content:"";flex:1;height:1px;background:var(--line)}
+.btn{
+  background:var(--surface);border:1px solid var(--line-2);border-radius:10px;
+  padding:11px 15px;font-weight:600;font-size:14.5px;cursor:pointer;
+}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--gold-solid);border-color:var(--gold-solid);color:#1E1806}
+.btn.ghost{background:none;border-color:var(--line)}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.empty{text-align:center;color:var(--ink-3);padding:44px 20px;font-size:14.5px;line-height:1.6}
+.empty strong{display:block;color:var(--ink-2);font-size:16px;margin-bottom:5px;font-weight:700}
+textarea,input[type=text],input[type=search],select{
+  width:100%;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;
+  padding:11px 12px;font-size:15px;
+}
+textarea{min-height:150px;resize:vertical;font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.7}
+label.fld{display:block;margin:0 0 12px}
+label.fld > span{display:block;font-size:12.5px;font-weight:700;color:var(--ink-2);margin-bottom:5px}
+.hint{font-size:12.5px;color:var(--ink-3);line-height:1.55;margin:6px 0 0}
+
+/* ---- group chips ---- */
+.chip{
+  display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:3px 10px 3px 7px;
+  font-size:11.5px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);white-space:nowrap;
+}
+.chip .gi{width:13px;height:13px;flex-shrink:0}
+
+/* ---- grading ---- */
+.pick-row{display:flex;gap:7px;overflow-x:auto;padding:2px 16px 2px;margin:14px -16px 0;scrollbar-width:none}
+.pick-row::-webkit-scrollbar{display:none}
+.pick{
+  flex-shrink:0;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;
+  padding:7px 13px;font-size:13.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;
+}
+.pick[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.pick .gi{width:13px;height:13px}
+.pick .n{font-size:11px;opacity:.6;font-weight:700}
+
+.cand-card{padding:17px 16px 15px;margin-top:12px}
+.cand-head{display:flex;align-items:flex-start;gap:12px}
+.cand-name{font-size:25px;font-weight:800;line-height:1.15;letter-spacing:-.02em;flex:1;min-width:0}
+.cand-pos{font-size:12px;font-weight:700;color:var(--ink-3);flex-shrink:0;padding-top:5px}
+.cand-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;align-items:center}
+.meta-pill{
+  font-size:12.5px;font-weight:600;background:var(--surface-2);border-radius:7px;padding:4px 9px;color:var(--ink-2);
+}
+.meta-pill.miss{color:var(--ink-3);font-style:italic;font-weight:500}
+
+.edit-link{
+  background:none;border:0;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;
+  text-decoration:underline;text-underline-offset:2px;padding:4px 2px;
+}
+.edit-panel{margin-top:11px;padding:12px;background:var(--surface-2);border-radius:11px}
+.ep-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin-bottom:6px}
+.edit-panel .hint{margin-top:7px}
+.crit{margin-top:16px}
+.crit-head{display:flex;align-items:baseline;gap:8px;margin-bottom:7px}
+.crit-name{font-family:Archivo,sans-serif;font-size:13.5px;font-weight:700;letter-spacing:.01em}
+.crit-cur{margin-left:auto;font-size:12px;font-weight:600;color:var(--ink-3)}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.sbtn{
+  background:var(--surface-2);border:1px solid transparent;border-radius:11px;
+  padding:9px 2px 7px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;
+  min-height:60px;justify-content:center;transition:background .09s,color .09s;
+}
+.sbtn .v{font-family:"JetBrains Mono",monospace;font-size:19px;font-weight:700;line-height:1}
+.sbtn .l{font-size:9.5px;font-weight:600;color:var(--ink-3);text-align:center;line-height:1.2;padding:0 2px}
+.sbtn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--ground)}
+.sbtn[aria-pressed="true"] .l{color:color-mix(in srgb,var(--ground) 72%,transparent)}
+.sbtn:active{transform:scale(.96)}
+
+.yr{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.yr .sbtn{min-height:40px}
+.yr .sbtn .v{font-size:13px;font-family:"Public Sans",sans-serif;font-weight:700}
+
+.nav-row{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;margin-top:16px}
+.nav-btn{
+  background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:13px 16px;
+  font-weight:700;font-size:14.5px;cursor:pointer;display:flex;align-items:center;gap:7px;
+}
+.nav-btn.next{background:var(--gold-solid);border-color:var(--gold-solid);color:#1E1806}
+.nav-btn:disabled{opacity:.4}
+.nav-mid{text-align:center;font-size:12px;color:var(--ink-3);font-weight:600}
+
+/* ---- list rows ---- */
+.list{margin-top:12px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--surface)}
+.lrow{
+  display:flex;align-items:center;gap:11px;padding:11px 13px;border-bottom:1px solid var(--line);
+  cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;width:100%;text-align:left;
+}
+.lrow:last-child{border-bottom:0}
+.lrow:active{background:var(--surface-2)}
+.lrow .nm{display:block;font-weight:600;font-size:15px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lrow .mj{font-size:12px;color:var(--ink-3);font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lrow .txt{flex:1;min-width:0}
+.tick{
+  width:23px;height:23px;border-radius:50%;flex-shrink:0;border:1.5px solid var(--line-2);
+  display:grid;place-items:center;
+}
+.tick.on{background:var(--good);border-color:var(--good)}
+.tick.on svg{width:13px;height:13px;stroke:var(--surface);stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+:root[data-theme="dark"] .tick.on svg,
+:root:not([data-theme="light"]) .tick.on svg{stroke:#10231A}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .tick.on svg{stroke:#fff}}
+.lrow .score{font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:700;color:var(--ink-3);flex-shrink:0}
+
+/* ---- results ---- */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 11px}
+.stat .k{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3)}
+.stat .v{font-family:"JetBrains Mono",monospace;font-size:21px;font-weight:700;margin-top:2px;line-height:1.1}
+
+.rrow{display:flex;align-items:center;gap:10px;padding:10px 12px 10px 0;border-bottom:1px solid var(--line);position:relative}
+.rrow:last-child{border-bottom:0}
+.rrow .stripe{width:4px;align-self:stretch;border-radius:0 3px 3px 0;flex-shrink:0;margin-right:8px}
+.rrow .txt{flex:1;min-width:0}
+.rrow .nm{display:block;font-weight:600;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rrow .sub{display:block;font-size:11.5px;color:var(--ink-3);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rrow .fs{font-family:"JetBrains Mono",monospace;font-size:17px;font-weight:700;flex-shrink:0;text-align:right}
+.rrow .fs .of{display:block;font-size:9.5px;color:var(--ink-3);font-weight:600;letter-spacing:.03em}
+.rrow.thin{opacity:.62}
+.dec{display:flex;gap:4px;flex-shrink:0}
+.dbtn{
+  width:29px;height:29px;border-radius:8px;border:1px solid var(--line-2);background:var(--surface);
+  font-size:11px;font-weight:800;cursor:pointer;color:var(--ink-3);display:grid;place-items:center;
+}
+.dbtn[aria-pressed="true"][data-d="y"]{background:var(--good);border-color:var(--good);color:var(--surface)}
+.dbtn[aria-pressed="true"][data-d="m"]{background:var(--warn);border-color:var(--warn);color:var(--surface)}
+.dbtn[aria-pressed="true"][data-d="n"]{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+
+.detail-grid{display:grid;grid-template-columns:1fr auto auto auto;gap:2px 10px;font-size:13px;margin-top:10px;align-items:center}
+.detail-grid .hd{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);padding-bottom:4px;border-bottom:1px solid var(--line)}
+.detail-grid .who{font-weight:600;padding:5px 0}
+.detail-grid .n{font-family:"JetBrains Mono",monospace;text-align:center;font-weight:600}
+.cmt{grid-column:1/-1;font-size:12.5px;color:var(--ink-2);padding:0 0 7px;border-bottom:1px solid var(--line);line-height:1.45}
+.cmt:empty{display:none}
+
+details.acc{border-bottom:1px solid var(--line)}
+details.acc:last-child{border-bottom:0}
+details.acc > summary{list-style:none;cursor:pointer;padding:0}
+details.acc > summary::-webkit-details-marker{display:none}
+details.acc[open] .rrow{border-bottom:0}
+.acc-body{padding:2px 12px 14px 12px;background:var(--surface-2)}
+
+.seg{display:grid;grid-auto-flow:column;gap:3px;background:var(--surface-2);border-radius:10px;padding:3px;margin-top:12px}
+.seg button{
+  background:none;border:0;border-radius:8px;padding:7px 4px;font-size:12.5px;font-weight:700;
+  color:var(--ink-3);cursor:pointer;white-space:nowrap;
+}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+dialog{
+  border:0;border-radius:16px 16px 0 0;padding:0;background:var(--surface);color:var(--ink);
+  width:100%;max-width:600px;margin:auto auto 0;box-shadow:0 -8px 40px rgba(0,0,0,.25);
+}
+dialog::backdrop{background:rgba(10,9,5,.55)}
+.sheet{padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
+.sheet h2{font-size:17px;margin-bottom:3px}
+.sheet .hint{margin-bottom:14px}
+.who-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.who-btn{
+  background:var(--surface-2);border:1px solid transparent;border-radius:11px;padding:13px 10px;
+  font-weight:700;font-size:14.5px;cursor:pointer;text-align:left;
+}
+.who-btn[aria-pressed="true"]{background:var(--ink);color:var(--ground)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<!-- ============ SHARED DOCUMENT (the database) ============ -->
+<div id="db" hidden
+     data-interviewers="Kristina|Sam|Amanda|Marley|Todd|Jacob|Nikolina|Wil|Norah"
+     data-groups="Star|Heart|Triangle|Lightning Bolt|Smiley Face"
+     data-cycle="Fall 2026">
+  <div id="roster"></div>
+</div>
+
+<!-- ============ LOCAL UI ============ -->
+<artifact-local>
+<div class="shell">
+  <div class="top">
+    <div class="brand">
+      <h1>Guide Room</h1>
+      <span class="sub" id="cycleLabel">Fall 2026</span>
+    </div>
+    <button class="whoami unset" id="whoBtn"><span class="dot"></span><span id="whoName">Pick your name</span></button>
+  </div>
+  <div id="banners"></div>
+  <main id="view"></main>
+</div>
+
+<nav class="tabs">
+  <div class="tabs-inner" id="tabsInner"></div>
+</nav>
+
+<dialog id="whoDlg"><div class="sheet">
+  <h2>Who's grading?</h2>
+  <p class="hint">Saved on this device only. Your scores are filed under this name.</p>
+  <div class="who-grid" id="whoGrid"></div>
+  <div class="row" style="margin-top:14px"><button class="btn ghost" id="whoClose" style="flex:1">Close</button></div>
+</div></dialog>
+
+<dialog id="txtDlg"><div class="sheet">
+  <h2 id="txtTitle">Export</h2>
+  <p class="hint" id="txtHint"></p>
+  <textarea id="txtArea" readonly></textarea>
+  <div class="row" style="margin-top:12px">
+    <button class="btn primary" id="txtCopy" style="flex:1">Copy</button>
+    <button class="btn ghost" id="txtClose">Close</button>
+  </div>
+</div></dialog>
+<datalist id="majorList"></datalist>
+</artifact-local>
+
+<script>
+(() => {
+"use strict";
+
+/* ---------- constants ---------- */
+const CRIT = [
+  {k:"spk", name:"Speaking skill",     labels:["Can't speak","Meh","Average","Above avg","Ready for a tour"]},
+  {k:"per", name:"Personable",         labels:["Nothing there","Meh","Average","Above avg","Love listening"]},
+  {k:"imp", name:"Overall impression", labels:["Wouldn't hire","Meh","Average","Above avg","Need to hire"]}
+];
+const YEARS = ["Freshman","Sophomore","Junior","Senior","Other"];
+const YRSHORT = {Freshman:"Fr",Sophomore:"So",Junior:"Jr",Senior:"Sr",Other:"Other"};
+const MAJORS = ["Accounting", "Actuarial Science", "Aeronautical Engineering Technology", "Aeronautical and Astronautical Engineering", "Agribusiness", "Agricultural Economics", "Agricultural Education", "Agricultural Engineering", "Agricultural Engineering Technology and Management", "Animal Sciences", "Animation and Visual Effects", "Anthropology", "Aquatic Sciences", "Artificial Intelligence (Liberal Arts)", "Artificial Intelligence (Science)", "Astrophysics", "Biochemistry", "Biochemistry (Chemistry)", "Biological Engineering", "Biology", "Biomedical Engineering", "Biomedical Health Sciences", "Biomolecular Design", "Brain and Behavioral Sciences", "Business Analytics and Information Management", "Cell, Molecular, and Developmental Biology", "Chemical Biology and Biochemistry", "Chemical Engineering", "Chemistry", "Chemistry &#8211; American Chemical Society", "Civil Engineering", "Cognitive Science", "Communication", "Computer Engineering", "Computer Engineering Technology", "Computer Science", "Computer and Information Technology", "Construction Engineering", "Construction Management", "Creative Writing", "Crop, Soil and Agroecosystem Sciences", "Data Analytics, Technologies and Applications", "Data Science", "Design Studies", "Design and Construction Integration", "Developmental and Family Science", "Digital Criminology", "Early Childhood Education and Exceptional Needs", "Ecology, Evolution and Environmental Sciences", "Economics", "Economics (Business)", "Electrical Engineering", "Electrical Engineering Technology", "Elementary Education", "Engineering (First-Year)", "English", "English Education", "Environmental Geosciences", "Environmental and Ecological Engineering", "Environmental and Natural Resources Engineering", "Exploratory Pre-medicine and Health", "Exploratory Studies", "Family and Consumer Sciences Education", "Farm Management", "Film and Video", "Finance", "Financial Counseling and Planning", "Flight (Professional Flight Technology)", "Food Science", "Forestry", "Game Development", "General Education: Curriculum and Instruction (non-licensure)", "General Education: Educational Studies (non-licensure)", "General Management", "Genetics", "Geology and Geophysics", "Health and Disease", "History", "History of Science, Technology and Medicine", "Horticulture", "Hospitality and Tourism Management", "Human Resource Development", "Human Services", "Inclusion: Dual License in Special Education (K-6) and Elementary Education", "Industrial (Consumer Product) Design", "Industrial Engineering", "Industrial Engineering Technology", "Industrial Microbiology and Biotechnology", "Insect Biology", "Integrated Business and Engineering", "Integrated Science and Business \u2014 Applied Statistics", "Integrated Studio Arts (Portfolio Required)", "Interdisciplinary Engineering Studies", "Interdisciplinary Performance", "Interdisciplinary Studies", "Interior (Space Planning) Design", "Interior Architecture", "Kinesiology", "Landscape Architecture (Pre)", "Law and Society", "Linguistics", "Marketing", "Materials Engineering", "Mathematics", "Mathematics Applied", "Mathematics Education", "Mathematics Statistics", "Mechanical Engineering", "Mechanical Engineering Technology", "Mechatronics Engineering Technology", "Medical Laboratory Sciences", "Motorsports Engineering", "Multidisciplinary Engineering", "Multidisciplinary Technology", "Music", "Natural Resources and Environmental Science", "Neurobiology and Physiology", "Nuclear Engineering", "Nursing", "Nutrition Science", "Nutrition and Dietetics", "Nutrition and Dietetics/ Nutrition, Fitness and Health", "Occupational and Environmental Health Sciences", "Organizational Behavior and Human Resource Management", "Organizational Leadership", "Pharmaceutical Sciences", "Philosophy", "Physics", "Physics Applied", "Planetary Sciences", "Plant Genetics, Breeding and Biotechnology", "Plant Science", "Plant Studies, Exploratory (Pre)", "Political Science", "Pre-Professional", "Pre-Veterinary Medicine", "Professional Writing", "Psychological Sciences", "Public Health", "Quantitative Business Economics", "Radiological Health Sciences", "Robotics Engineering Technology", "Sales and Marketing", "Science Education", "Selling and Sales Management", "Social Studies Education", "Sociology", "Sound for the Performing Arts", "Special Education: Mild and Intense Intervention P-12", "Speech, Language and Hearing Sciences", "Statistics Applied", "Statistics, Math Emphasis", "Studio Arts and Technology", "Supply Chain and Operations Management", "Sustainable Food and Farming Systems", "Theatre", "Themed Entertainment Design", "Turf Management and Science", "UX Design", "Unmanned Aerial Systems", "Veterinary Technology", "Virtual Design and Construction", "Visual Communication Design", "Web Programming and Design", "Wildlife Science", "World Languages and Cultures"];
+
+/* Purdue's official major names, used as suggestions only \u2014 free text always wins,
+   because double majors, pre-professional tracks and First-Year Engineering
+   are real answers that aren't on the list. */
+const MAJOR_KEY = new Map(MAJORS.map(m => [m.toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9]+/g,""), m]));
+function normMajor(v){
+  v = String(v||"").trim().replace(/\s+/g," ");
+  if (!v) return "";
+  const hit = MAJOR_KEY.get(v.toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9]+/g,""));
+  return hit || v;      // canonical casing when we know it, otherwise exactly what they wrote
+}
+
+const GLYPH = {
+  "star":'<path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4 6.2 20.5l1.1-6.5L2.6 9.4l6.5-.9z"/>',
+  "heart":'<path d="M12 20.5S3.5 15 3.5 9.2A4.7 4.7 0 0 1 12 6.4a4.7 4.7 0 0 1 8.5 2.8c0 5.8-8.5 11.3-8.5 11.3z"/>',
+  "triangle":'<path d="M12 3.3l9 15.4H3z"/>',
+  "lightning bolt":'<path d="M13.5 2.5L4.8 13.4h5.6l-.9 8.1 8.7-10.9h-5.6z"/>',
+  "smiley face":'<circle cx="12" cy="12" r="9.2"/><circle cx="9" cy="10" r=".9" fill="currentColor"/><circle cx="15" cy="10" r=".9" fill="currentColor"/><path d="M8 14.4a5 5 0 0 0 8 0"/>'
+};
+const BANDS = [[4.5,"--b5"],[4,"--b45"],[3.5,"--b4"],[3,"--b35"],[2.5,"--b3"],[2,"--b25"],[-1,"--b2"]];
+
+/* ---------- element refs ---------- */
+const db      = document.getElementById("db");
+const roster  = document.getElementById("roster");
+const view    = document.getElementById("view");
+const banners = document.getElementById("banners");
+
+/* ---------- local (per-device) state ---------- */
+const LS = "guideroom.local.v1";
+const local = Object.assign(
+  {tab:"grade", me:"", group:"all", cand:null, sort:"score", filter:"all", editing:false, dismissed:{}},
+  (()=>{ try{ return JSON.parse(localStorage.getItem(LS)||"{}"); }catch(e){ return {}; } })()
+);
+const saveLocal = () => { try{ localStorage.setItem(LS, JSON.stringify(local)); }catch(e){} };
+
+/* ---------- capability wiring ---------- */
+let art = null;           // artifact namespace
+let mode = "solo";        // "shared" | "readonly" | "solo"
+let dl = null;            // downloads namespace
+let lostCount = 0;
+let restored = "";
+
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const slug = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") || "x";
+
+/* Every shared write goes through here. On a live doc, sync() turns capture on
+   for the mutation and resolves once it has been appended to the document. */
+async function write(fn){
+  if (mode === "shared" && art){
+    try { await art.sync(fn); }
+    catch(err){
+      const code = err && err.code;
+      if (code === "not_writer" || code === "not_granted" || code === "consent_required"){
+        mode = "readonly"; render();
+        return;
+      }
+      if (code === "rate_limited"){ flash("Saving too fast \u2014 that change may not have stuck. Try again."); }
+      else { lostCount++; }
+      render();
+      return;
+    }
+  } else {
+    fn();
+  }
+  mirror();
+  render();
+}
+
+/* Local safety net: a copy of the whole roster on this device, so a sync
+   failure never means lost work. */
+function mirror(){
+  try { localStorage.setItem("guideroom.mirror.v1", JSON.stringify({at:Date.now(), html:roster.innerHTML})); } catch(e){}
+}
+
+let flashMsg = "";
+function flash(m){ flashMsg = m; setTimeout(()=>{ flashMsg=""; render(); }, 5000); }
+
+/* ---------- reading the shared document ---------- */
+const interviewers = () => (db.dataset.interviewers||"").split("|").map(s=>s.trim()).filter(Boolean);
+const groups       = () => (db.dataset.groups||"").split("|").map(s=>s.trim()).filter(Boolean);
+
+function cands(){
+  return [...roster.children].map(el => {
+    const c = {
+      el, key: el.dataset.key||"", name: el.dataset.name||"",
+      year: el.dataset.year||"", major: el.dataset.major||"",
+      email: el.dataset.email||"", group: el.dataset.group||"",
+      checkin: el.dataset.checkin||"", note: el.dataset.note||"",
+      decision: el.dataset.decision||"", scores:{}, comments:{}
+    };
+    for (const who of interviewers()){
+      const s = el.getAttribute("data-s-"+slug(who));
+      if (s) {
+        const p = s.split(",");
+        c.scores[who] = {spk:num(p[0]), per:num(p[1]), imp:num(p[2])};
+      }
+      const cm = el.getAttribute("data-c-"+slug(who));
+      if (cm) c.comments[who] = cm;
+    }
+    return c;
+  });
+}
+const num = v => { const n = parseFloat(v); return Number.isFinite(n) ? n : null; };
+
+/* Averages that IGNORE missing raters \u2014 the fix for the /9 problem. */
+function tally(c){
+  const out = {n:0, spk:null, per:null, imp:null, final:null};
+  const acc = {spk:[], per:[], imp:[]};
+  let raters = 0;
+  for (const who of interviewers()){
+    const s = c.scores[who];
+    if (!s) continue;
+    let any = false;
+    for (const k of ["spk","per","imp"]) if (s[k] != null){ acc[k].push(s[k]); any = true; }
+    if (any) raters++;
+  }
+  out.n = raters;
+  const mean = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : null;
+  out.spk = mean(acc.spk); out.per = mean(acc.per); out.imp = mean(acc.imp);
+  const parts = [out.spk,out.per,out.imp].filter(v=>v!=null);
+  out.final = parts.length ? parts.reduce((x,y)=>x+y,0)/parts.length : null;
+  return out;
+}
+const band = v => { for (const [t,c] of BANDS) if (v >= t) return c; return "--b2"; };
+const isDone = (c,me) => { const s=c.scores[me]; return !!s && s.spk!=null && s.per!=null && s.imp!=null; };
+function gi(g){
+  const p = GLYPH[String(g).toLowerCase()] || '<circle cx="12" cy="12" r="8.5"/>';
+  return '<svg class="gi" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="0" aria-hidden="true">'+p+'</svg>';
+}
+
+/* ---------- mutations ---------- */
+function setScore(c, critKey, val){
+  const me = local.me; if (!me) return;
+  const a = "data-s-"+slug(me);
+  const cur = (c.el.getAttribute(a)||",,").split(",");
+  const idx = {spk:0, per:1, imp:2}[critKey];
+  cur[idx] = (String(cur[idx]) === String(val)) ? "" : String(val);   // tap again to clear
+  write(() => c.el.setAttribute(a, cur.slice(0,3).join(",")));
+}
+const setAttr  = (c,k,v) => write(() => { if (v==="") c.el.removeAttribute(k); else c.el.setAttribute(k,v); });
+const setField = (c,f,v) => setAttr(c, "data-"+f, v);
+function setComment(c, txt){
+  const me = local.me; if (!me) return;
+  setAttr(c, "data-c-"+slug(me), txt.trim());
+}
+
+/* ---------- roster import ---------- */
+function parseRoster(text){
+  const lines = text.replace(/\r/g,"").split("\n").map(l=>l.trim()).filter(Boolean);
+  if (!lines.length) return [];
+  const split = l => l.includes("\t") ? l.split("\t") : l.split(",");
+  let hdr = null, start = 0;
+  const first = split(lines[0]).map(s=>s.trim().toLowerCase());
+  if (first.some(h => /^(first|last|name|full name|year|major|email)/.test(h))){ hdr = first; start = 1; }
+  const find = (...keys) => { if(!hdr) return -1; for (const k of keys){ const i = hdr.findIndex(h=>h.includes(k)); if (i>=0) return i; } return -1; };
+  const iF = find("first"), iL = find("last"), iN = find("full name","name"),
+        iY = find("year","class"), iM = find("major"), iE = find("email");
+  const out = [];
+  for (let li = start; li < lines.length; li++){
+    const p = split(lines[li]).map(s=>s.trim());
+    let name;
+    if (hdr){
+      name = iN>=0 && p[iN] ? p[iN] : [p[iF]||"", p[iL]||""].join(" ").trim();
+    } else {
+      name = p[0]||"";
+    }
+    if (!name) continue;
+    const yRaw = (hdr ? (iY>=0?p[iY]:"") : (p[1]||"")).toLowerCase();
+    let year = "";
+    if (/fresh|first|^f$|^1/.test(yRaw)) year = "Freshman";
+    else if (/soph|^so$|^2/.test(yRaw)) year = "Sophomore";
+    else if (/jun|^j$|^3/.test(yRaw)) year = "Junior";
+    else if (/sen|^s$|^4/.test(yRaw)) year = "Senior";
+    else if (yRaw) year = "Other";
+    out.push({
+      name,
+      year,
+      major: normMajor(hdr ? (iM>=0?p[iM]:"") : (p[2]||"")),
+      email: (hdr ? (iE>=0?p[iE]:"") : (p[3]||"")) || ""
+    });
+  }
+  return out;
+}
+
+function importRoster(list, replace){
+  const gs = groups();
+  write(() => {
+    if (replace) roster.replaceChildren();
+    const base = roster.children.length;
+    list.forEach((c, i) => {
+      const el = document.createElement("div");
+      el.className = "cand";
+      el.dataset.key   = "c" + Date.now().toString(36) + (base+i).toString(36);
+      el.dataset.name  = c.name;
+      if (c.year)  el.dataset.year  = c.year;
+      if (c.major) el.dataset.major = c.major;
+      if (c.email) el.dataset.email = c.email;
+      el.dataset.group = gs[(base + i) % gs.length];   // even round-robin
+      roster.appendChild(el);
+    });
+  });
+}
+
+/* ---------- export ---------- */
+function csvCell(v){ v = String(v==null?"":v); return /[",\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
+function resultsCSV(){
+  const who = interviewers();
+  const head = ["Name","Group","Year","Major","Email","Raters","Speaking","Personable","Impression","Final","Decision"]
+    .concat(who.flatMap(w=>[w+" Spk",w+" Per",w+" Imp",w+" Comment"]));
+  const rows = [head];
+  for (const c of cands()){
+    const t = tally(c);
+    const r = [c.name,c.group,c.year,c.major,c.email,t.n,
+      t.spk?.toFixed(2)??"", t.per?.toFixed(2)??"", t.imp?.toFixed(2)??"", t.final?.toFixed(2)??"",
+      {y:"Yes",m:"Maybe",n:"No"}[c.decision]||""];
+    for (const w of who){
+      const s = c.scores[w]||{};
+      r.push(s.spk??"", s.per??"", s.imp??"", c.comments[w]||"");
+    }
+    rows.push(r);
+  }
+  return rows.map(r=>r.map(csvCell).join(",")).join("\n");
+}
+async function offerFile(filename, text, mime){
+  if (dl){
+    try { await dl.save({filename, data:new Blob([text],{type:mime||"text/plain"})}); return true; }
+    catch(e){ /* declined or unavailable \u2014 fall through to the copy sheet */ }
+  }
+  showText(filename, "Downloads aren't available here \u2014 copy this instead.", text);
+  return false;
+}
+
+/* ---------- dialogs ---------- */
+const whoDlg=document.getElementById("whoDlg"), txtDlg=document.getElementById("txtDlg");
+function showText(title, hint, body){
+  document.getElementById("txtTitle").textContent = title;
+  document.getElementById("txtHint").textContent = hint;
+  document.getElementById("txtArea").value = body;
+  txtDlg.showModal();
+}
+document.getElementById("txtClose").onclick = () => txtDlg.close();
+document.getElementById("txtCopy").onclick = async e => {
+  const ta = document.getElementById("txtArea");
+  try { await navigator.clipboard.writeText(ta.value); e.target.textContent = "Copied"; }
+  catch(err){ ta.select(); e.target.textContent = "Press \u2318C"; }
+  setTimeout(()=>{ e.target.textContent="Copy"; }, 1800);
+};
+document.getElementById("whoClose").onclick = () => whoDlg.close();
+document.getElementById("whoBtn").onclick = () => { renderWho(); whoDlg.showModal(); };
+function renderWho(){
+  document.getElementById("whoGrid").innerHTML = interviewers().map(w =>
+    `<button class="who-btn" data-w="${esc(w)}" aria-pressed="${w===local.me}">${esc(w)}</button>`).join("");
+}
+document.getElementById("whoGrid").addEventListener("click", e => {
+  const b = e.target.closest("[data-w]"); if (!b) return;
+  local.me = b.dataset.w; local.cand = null; saveLocal(); whoDlg.close(); render();
+});
+
+/* ================= RENDER ================= */
+const ICON = {
+  grade:'<path d="M4 5.5h16M4 12h16M4 18.5h10"/><circle cx="19" cy="18.5" r="2.2"/>',
+  checkin:'<path d="M4 12.5l5 5 11-11"/>',
+  results:'<path d="M4 20V9m5 11V4m5 16v-7m5 7V7"/>',
+  setup:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M21.5 12h-3M5.5 12h-3M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1M18.7 18.7l-2.1-2.1M7.4 7.4L5.3 5.3"/>'
+};
+const TABS = [["checkin","Check in"],["grade","Grade"],["results","Results"],["setup","Setup"]];
+
+function render(){
+  document.getElementById("cycleLabel").textContent = db.dataset.cycle || "";
+  const wb = document.getElementById("whoBtn");
+  wb.className = "whoami" + (local.me ? "" : " unset");
+  document.getElementById("whoName").textContent = local.me || "Pick your name";
+
+  const all = cands();
+  const mineLeft = local.me ? all.filter(c => c.checkin !== "no" && !isDone(c, local.me)).length : 0;
+
+  document.getElementById("tabsInner").innerHTML = TABS.map(([k,label]) => `
+    <button class="tab" data-tab="${k}" aria-selected="${local.tab===k}" role="tab">
+      <svg viewBox="0 0 24 24" aria-hidden="true">${ICON[k]}</svg>
+      <span>${label}</span>
+      ${k==="grade" && mineLeft ? `<span class="cnt">${mineLeft}</span>` : ""}
+    </button>`).join("");
+
+  /* banners */
+  const bs = [];
+  if (mode === "readonly")
+    bs.push(["bad","view-only",`<div><b>View only.</b> You can read everything, but scores you tap won't save. Ask whoever shared this link to give you edit access.</div>`]);
+  else if (mode === "solo")
+    bs.push(["warn","solo",`<div><b>Not syncing.</b> This copy isn't connected to the shared record \u2014 your work stays on this device only. Use <b>Setup \u2192 Export</b> before you close it.</div>`]);
+  if (restored) bs.push(["warn","restored",`<div><b>Restored from this device.</b> Picked up where you left off (saved ${esc(restored)}). Still not syncing \u2014 export before you close.</div>`]);
+  if (lostCount) bs.push(["warn","lost",`<div><b>${lostCount} change${lostCount>1?"s":""} may not have saved.</b> Check the Results tab; re-tap anything missing.</div>`]);
+  if (flashMsg) bs.push(["warn","flash",`<div>${esc(flashMsg)}</div>`]);
+  banners.innerHTML = bs.filter(b=>!local.dismissed[b[1]]).map(([cls,id,html]) =>
+    `<div class="banner ${cls}">${html}<button class="x" data-dismiss="${id}" aria-label="Dismiss">\u00D7</button></div>`).join("");
+
+  view.innerHTML =
+    local.tab === "grade"   ? viewGrade(all)   :
+    local.tab === "checkin" ? viewCheckin(all) :
+    local.tab === "results" ? viewResults(all) : viewSetup(all);
+}
+
+/* ---- GRADE ---- */
+function viewGrade(all){
+  if (!all.length) return emptyState("No one on the roster yet","Go to <b>Setup</b> and paste this cycle's list. It takes about ten seconds.");
+  if (!local.me) return emptyState("Pick your name first","Tap the button up top so your scores get filed under you.");
+
+  const gs = groups();
+  const pool = all.filter(c => c.checkin !== "no");
+  const list = local.group === "all" ? pool : pool.filter(c => c.group === local.group);
+
+  const picks = `<div class="pick-row">
+    <button class="pick" data-g="all" aria-pressed="${local.group==="all"}">All<span class="n">${(()=>{const l=pool.filter(c=>!isDone(c,local.me)).length;return l?l+"/"+pool.length:"\u2713";})()}</span></button>
+    ${gs.map(g=>{
+      const n = pool.filter(c=>c.group===g).length;
+      const left = pool.filter(c=>c.group===g && !isDone(c,local.me)).length;
+      return `<button class="pick" data-g="${esc(g)}" aria-pressed="${local.group===g}">${gi(g)}${esc(g)}<span class="n">${left?left+"/"+n:"\u2713"}</span></button>`;
+    }).join("")}
+  </div>`;
+
+  const cur = list.find(c => c.key === local.cand);
+  if (!cur){
+    if (!list.length) return picks + emptyState("Nobody here","Everyone in this group is checked out as a no-show, or the group is empty.");
+    return picks + `<div class="sec-label">Tap someone to grade</div><div class="list">` + list.map(c => {
+      const done = isDone(c, local.me);
+      const s = c.scores[local.me];
+      const partial = s && !done;
+      return `<button class="lrow" data-open="${c.key}">
+        <span class="tick ${done?"on":""}">${done?'<svg viewBox="0 0 24 24"><path d="M4 12.5l5 5 11-11"/></svg>':""}</span>
+        <span class="txt"><span class="nm">${esc(c.name)}</span>
+          <span class="mj">${esc(c.major||"major not listed")}${c.year?" \u00B7 "+YRSHORT[c.year]:""}</span></span>
+        ${done ? `<span class="score">${[s.spk,s.per,s.imp].join(" ")}</span>` : partial ? `<span class="score">partial</span>` : `${gi(c.group)}`}
+      </button>`;
+    }).join("") + `</div>`;
+  }
+
+  const idx = list.indexOf(cur);
+  const s = cur.scores[local.me] || {};
+  const cmt = cur.comments[local.me] || "";
+
+  return picks + `
+  <div class="card cand-card">
+    <div class="cand-head">
+      <div class="cand-name">${esc(cur.name)}</div>
+      <div class="cand-pos num">${idx+1}/${list.length}</div>
+    </div>
+    <div class="cand-meta">
+      <span class="chip">${gi(cur.group)}${esc(cur.group)}</span>
+      <span class="meta-pill${cur.year?"":" miss"}">${esc(cur.year||"year unknown")}</span>
+      <span class="meta-pill${cur.major?"":" miss"}">${esc(cur.major||"major unknown")}</span>
+      <button class="edit-link" data-edit="${local.editing?"0":"1"}">${local.editing?"done":"fix"}</button>
+    </div>
+    ${local.editing ? `
+    <div class="edit-panel">
+      <div class="ep-label">Year</div>
+      <div class="yr">${YEARS.map(y=>`
+        <button class="sbtn" data-year="${y}" aria-pressed="${cur.year===y}"><span class="v">${YRSHORT[y]}</span></button>`).join("")}
+      </div>
+      <div class="ep-label" style="margin-top:11px">Major</div>
+      <input type="text" id="majIn" list="majorList" value="${esc(cur.major)}"
+             placeholder="Start typing \u2014 or write anything" autocomplete="off">
+      <p class="hint">Fixing this fixes it for all ${interviewers().length} of you. Double majors and pre-professional tracks are fine to type in full.</p>
+    </div>` : ""}
+
+    ${CRIT.map(cr => `
+      <div class="crit">
+        <div class="crit-head">
+          <span class="crit-name">${cr.name}</span>
+          <span class="crit-cur">${s[cr.k]!=null ? esc(cr.labels[s[cr.k]-1]) : "\u2014"}</span>
+        </div>
+        <div class="scale">
+          ${[1,2,3,4,5].map(v => `
+            <button class="sbtn" data-score="${cr.k}" data-v="${v}" aria-pressed="${s[cr.k]===v}"
+                    aria-label="${cr.name}: ${v}, ${esc(cr.labels[v-1])}">
+              <span class="v">${v}</span><span class="l">${esc(cr.labels[v-1])}</span>
+            </button>`).join("")}
+        </div>
+      </div>`).join("")}
+
+    <div class="crit">
+      <div class="crit-head"><span class="crit-name">Notes</span><span class="crit-cur">only you type this</span></div>
+      <input type="text" id="cmtIn" value="${esc(cmt)}" placeholder="What stood out?" autocomplete="off">
+    </div>
+
+    <div class="nav-row">
+      <button class="nav-btn" data-step="-1" ${idx<=0?"disabled":""}>\u2190 Back</button>
+      <div class="nav-mid">${isDone(cur,local.me) ? "All three scored" : "Tap a number for each"}</div>
+      <button class="nav-btn next" data-step="1">${idx>=list.length-1?"Done":"Next \u2192"}</button>
+    </div>
+  </div>
+  <div class="row" style="margin-top:10px"><button class="btn ghost" data-open="" style="flex:1">Back to list</button></div>`;
+}
+
+/* ---- CHECK IN ---- */
+function viewCheckin(all){
+  if (!all.length) return emptyState("No one on the roster yet","Paste this cycle's list in <b>Setup</b> first.");
+  const here = all.filter(c=>c.checkin==="in").length, no = all.filter(c=>c.checkin==="no").length;
+  return `
+  <div class="stats">
+    <div class="stat"><div class="k">Checked in</div><div class="v" style="color:var(--good)">${here}</div></div>
+    <div class="stat"><div class="k">No-show</div><div class="v" style="color:var(--bad)">${no}</div></div>
+    <div class="stat"><div class="k">Waiting</div><div class="v">${all.length-here-no}</div></div>
+  </div>
+  <div class="sec-label">Roster \u00B7 ${all.length}</div>
+  <div class="list">${all.map(c=>`
+    <div class="lrow" style="cursor:default">
+      <span class="txt">
+        <span class="nm">${esc(c.name)}</span>
+        <span class="mj">${esc(c.group)}${c.major?" \u00B7 "+esc(c.major):""}</span>
+      </span>
+      <span class="dec">
+        <button class="dbtn" data-checkin="${c.key}" data-v="in" aria-pressed="${c.checkin==="in"}" data-d="y" title="Here">\u2713</button>
+        <button class="dbtn" data-checkin="${c.key}" data-v="no" aria-pressed="${c.checkin==="no"}" data-d="n" title="No-show">\u2715</button>
+      </span>
+    </div>`).join("")}</div>
+  <p class="hint">A no-show drops out of everyone's grading list right away.</p>`;
+}
+
+/* ---- RESULTS ---- */
+function viewResults(all){
+  if (!all.length) return emptyState("Nothing to score yet","Add the roster in <b>Setup</b>.");
+  const rated = all.map(c => ({c, t:tally(c)}));
+  const scored = rated.filter(r => r.t.final != null);
+  const full = interviewers().length;
+
+  let rows = rated.slice();
+  if (local.filter !== "all") rows = rows.filter(r => r.c.decision === local.filter);
+  rows.sort((a,b) =>
+    local.sort === "name"  ? a.c.name.localeCompare(b.c.name) :
+    local.sort === "group" ? (a.c.group||"").localeCompare(b.c.group||"") || (b.t.final??-1)-(a.t.final??-1)
+                           : (b.t.final??-1)-(a.t.final??-1));
+
+  const avg = scored.length ? (scored.reduce((s,r)=>s+r.t.final,0)/scored.length) : null;
+  const thin = scored.filter(r => r.t.n < full).length;
+
+  return `
+  <div class="stats">
+    <div class="stat"><div class="k">Scored</div><div class="v">${scored.length}<span style="font-size:12px;color:var(--ink-3)">/${all.length}</span></div></div>
+    <div class="stat"><div class="k">Average</div><div class="v">${avg!=null?avg.toFixed(2):"\u2014"}</div></div>
+    <div class="stat"><div class="k">Yes</div><div class="v" style="color:var(--good)">${all.filter(c=>c.decision==="y").length}</div></div>
+  </div>
+  ${thin ? `<p class="hint" style="margin-top:9px">${thin} candidate${thin>1?"s":""} scored by fewer than all ${full} interviewers \u2014 shown faded, averaged over who actually rated them.</p>` : ""}
+
+  <div class="seg" role="group" aria-label="Sort">
+    ${[["score","Top score"],["name","A\u2013Z"],["group","By group"]].map(([k,l])=>
+      `<button data-sort="${k}" aria-pressed="${local.sort===k}">${l}</button>`).join("")}
+  </div>
+  <div class="seg" role="group" aria-label="Filter">
+    ${[["all","All"],["y","Yes"],["m","Maybe"],["n","No"],["","Undecided"]].map(([k,l])=>
+      `<button data-filter="${k}" aria-pressed="${local.filter===k}">${l}</button>`).join("")}
+  </div>
+
+  <div class="list" style="margin-top:10px">
+    ${rows.length ? rows.map(({c,t}) => `
+      <details class="acc">
+        <summary>
+          <div class="rrow ${t.n && t.n<full ? "thin":""}">
+            <span class="stripe" style="background:${t.final!=null?`var(${band(t.final)})`:"var(--line-2)"}"></span>
+            <span class="txt">
+              <span class="nm">${esc(c.name)}</span>
+              <span class="sub">${c.checkin==="no"?`<b style="color:var(--bad)">No-show</b> \u00B7 `:""}${esc(c.group)}${c.major?" \u00B7 "+esc(c.major):""}${c.year?" \u00B7 "+YRSHORT[c.year]:""}</span>
+            </span>
+            <span class="fs" style="color:${t.final!=null?`var(${band(t.final)})`:"var(--ink-3)"}">
+              ${t.final!=null?t.final.toFixed(2):"\u2014"}<span class="of">${t.n}/${full} rated</span>
+            </span>
+            <span class="dec">
+              ${[["y","Y"],["m","M"],["n","N"]].map(([d,l])=>
+                `<button class="dbtn" data-dec="${c.key}" data-d="${d}" aria-pressed="${c.decision===d}">${l}</button>`).join("")}
+            </span>
+          </div>
+        </summary>
+        <div class="acc-body">
+          <div class="detail-grid">
+            <span class="hd">Interviewer</span><span class="hd">Spk</span><span class="hd">Per</span><span class="hd">Imp</span>
+            ${interviewers().map(w=>{
+              const s = c.scores[w], cm = c.comments[w];
+              if (!s && !cm) return `<span class="who" style="color:var(--ink-3)">${esc(w)}</span><span class="n" style="color:var(--ink-3)">\u2013</span><span class="n" style="color:var(--ink-3)">\u2013</span><span class="n" style="color:var(--ink-3)">\u2013</span>`;
+              return `<span class="who">${esc(w)}</span>
+                <span class="n">${s?.spk??"\u2013"}</span><span class="n">${s?.per??"\u2013"}</span><span class="n">${s?.imp??"\u2013"}</span>
+                ${cm?`<span class="cmt">${esc(cm)}</span>`:""}`;
+            }).join("")}
+          </div>
+          <div class="row" style="margin-top:11px">
+            <span class="meta-pill">Speaking ${t.spk!=null?t.spk.toFixed(2):"\u2014"}</span>
+            <span class="meta-pill">Personable ${t.per!=null?t.per.toFixed(2):"\u2014"}</span>
+            <span class="meta-pill">Impression ${t.imp!=null?t.imp.toFixed(2):"\u2014"}</span>
+          </div>
+        </div>
+      </details>`).join("") : `<div class="empty">Nothing in this filter.</div>`}
+  </div>
+
+  <div class="sec-label">Export</div>
+  <div class="row">
+    <button class="btn" data-export="csv">Full CSV</button>
+    <button class="btn" data-export="emails-y">Yes emails</button>
+    <button class="btn" data-export="emails-m">Maybe emails</button>
+  </div>`;
+}
+
+/* ---- SETUP ---- */
+function viewSetup(all){
+  return `
+  <div class="sec-label">Roster</div>
+  <div class="card" style="padding:15px">
+    <label class="fld"><span>Paste from your application export</span>
+      <textarea id="importBox" placeholder="Name&#9;Year&#9;Major&#9;Email
+Aafiyah Chohan&#9;Sophomore&#9;Marketing&#9;chohan@purdue.edu
+
+Paste straight from Excel or Sheets \u2014 tabs or commas both work.
+A header row is detected automatically (First/Last also work instead of Name)."></textarea>
+    </label>
+    <div class="row">
+      <button class="btn primary" data-import="replace">Replace roster</button>
+      <button class="btn" data-import="add">Add to roster</button>
+    </div>
+    <p class="hint">Groups are assigned evenly and automatically. ${all.length ? `<b>${all.length}</b> on the roster now \u2014 replacing clears every score with it.` : ""}</p>
+  </div>
+
+  <div class="sec-label">Groups</div>
+  <div class="card" style="padding:15px">
+    <label class="fld"><span>One per line</span>
+      <textarea id="groupsBox" style="min-height:110px">${esc(groups().join("\n"))}</textarea></label>
+    <button class="btn" data-save="groups">Save groups</button>
+    <p class="hint">Changing these doesn't reshuffle anyone already assigned.</p>
+  </div>
+
+  <div class="sec-label">Interviewers</div>
+  <div class="card" style="padding:15px">
+    <label class="fld"><span>One per line</span>
+      <textarea id="whoBox" style="min-height:150px">${esc(interviewers().join("\n"))}</textarea></label>
+    <button class="btn" data-save="who">Save interviewers</button>
+    <p class="hint">Scores are filed under the exact name. Renaming someone hides the scores they already gave \u2014 rename back to see them again.</p>
+  </div>
+
+  <div class="sec-label">Cycle</div>
+  <div class="card" style="padding:15px">
+    <label class="fld"><span>Label shown in the header</span>
+      <input type="text" id="cycleBox" value="${esc(db.dataset.cycle||"")}"></label>
+    <button class="btn" data-save="cycle">Save label</button>
+  </div>
+
+  <div class="sec-label">Backup</div>
+  <div class="row">
+    <button class="btn" data-export="csv">Download CSV</button>
+    <button class="btn ghost" data-export="json">Backup JSON</button>
+  </div>
+  <p class="hint">The CSV opens in Excel with every interviewer's raw scores and notes \u2014 the same columns your old sheet had, filled in for you.</p>
+  <p class="hint" style="margin-top:14px;color:var(--ink-3)">Status: ${
+    mode==="shared" ? "syncing to everyone on this link" :
+    mode==="readonly" ? "view only \u2014 you can't save changes" :
+    "not syncing \u2014 this device only"}.</p>`;
+}
+
+function emptyState(t, b){ return `<div class="card" style="margin-top:14px"><div class="empty"><strong>${t}</strong>${b}</div></div>`; }
+
+/* ================= EVENTS ================= */
+document.addEventListener("click", e => {
+  const t = e.target;
+  const hit = sel => t.closest(sel);
+  let el;
+
+  if ((el = hit("[data-tab]")))    { local.tab = el.dataset.tab; saveLocal(); return render(); }
+  if ((el = hit("[data-dismiss]"))){ local.dismissed[el.dataset.dismiss] = 1; saveLocal(); return render(); }
+  if ((el = hit("[data-g]")))      { local.group = el.dataset.g; local.cand = null; saveLocal(); return render(); }
+  if ((el = hit("[data-sort]")))   { local.sort = el.dataset.sort; saveLocal(); return render(); }
+  if ((el = hit("[data-filter]"))) { local.filter = el.dataset.filter; saveLocal(); return render(); }
+  if ((el = hit("[data-open]")))   { local.cand = el.dataset.open || null; saveLocal(); window.scrollTo(0,0); return render(); }
+
+  if ((el = hit("[data-edit]"))){ local.editing = el.dataset.edit === "1"; saveLocal(); return render(); }
+  if ((el = hit("[data-year]"))){
+    const c = cands().find(x => x.key === local.cand); if (!c) return;
+    return setField(c, "year", c.year === el.dataset.year ? "" : el.dataset.year);
+  }
+  if ((el = hit("[data-score]"))){
+    const c = cands().find(x => x.key === local.cand); if (!c) return;
+    return setScore(c, el.dataset.score, parseInt(el.dataset.v,10));
+  }
+  if ((el = hit("[data-step]"))){
+    commitComment(); commitMajor();
+    const pool = cands().filter(c => c.checkin !== "no");
+    const list = local.group === "all" ? pool : pool.filter(c => c.group === local.group);
+    const i = list.findIndex(c => c.key === local.cand);
+    const j = i + parseInt(el.dataset.step,10);
+    local.cand = (j >= 0 && j < list.length) ? list[j].key : null;
+    saveLocal(); window.scrollTo(0,0); return render();
+  }
+  if ((el = hit("[data-checkin]"))){
+    const c = cands().find(x => x.key === el.dataset.checkin); if (!c) return;
+    return setField(c, "checkin", c.checkin === el.dataset.v ? "" : el.dataset.v);
+  }
+  if ((el = hit("[data-dec]"))){
+    e.preventDefault();
+    const c = cands().find(x => x.key === el.dataset.dec); if (!c) return;
+    return setField(c, "decision", c.decision === el.dataset.d ? "" : el.dataset.d);
+  }
+  if ((el = hit("[data-import]"))){
+    const box = document.getElementById("importBox");
+    const list = parseRoster(box.value);
+    if (!list.length) return flash("Nothing to import \u2014 paste at least one name.");
+    if (el.dataset.import === "replace" && roster.children.length &&
+        !confirm(`Replace all ${roster.children.length} candidates and every score with ${list.length} new ones?`)) return;
+    box.value = "";
+    return importRoster(list, el.dataset.import === "replace");
+  }
+  if ((el = hit("[data-save]"))){
+    const k = el.dataset.save;
+    if (k === "groups"){
+      const v = document.getElementById("groupsBox").value.split("\n").map(s=>s.trim()).filter(Boolean);
+      if (!v.length) return flash("Keep at least one group.");
+      return write(() => db.setAttribute("data-groups", v.join("|")));
+    }
+    if (k === "who"){
+      const v = document.getElementById("whoBox").value.split("\n").map(s=>s.trim()).filter(Boolean);
+      if (!v.length) return flash("Keep at least one interviewer.");
+      return write(() => db.setAttribute("data-interviewers", v.join("|")));
+    }
+    if (k === "cycle") return write(() => db.setAttribute("data-cycle", document.getElementById("cycleBox").value.trim()));
+  }
+  if ((el = hit("[data-export]"))){
+    const k = el.dataset.export;
+    const tag = (db.dataset.cycle||"interviews").replace(/[^A-Za-z0-9]+/g,"-").toLowerCase();
+    if (k === "csv")  return offerFile(`${tag}-results.csv`, resultsCSV(), "text/csv");
+    if (k === "json") return offerFile(`${tag}-backup.json`, JSON.stringify({
+      cycle:db.dataset.cycle, groups:groups(), interviewers:interviewers(),
+      candidates:cands().map(c=>({name:c.name,year:c.year,major:c.major,email:c.email,group:c.group,
+        checkin:c.checkin,decision:c.decision,scores:c.scores,comments:c.comments}))
+    }, null, 2), "application/json");
+    if (k.startsWith("emails-")){
+      const d = k.split("-")[1];
+      const list = cands().filter(c => c.decision === d);
+      const missing = list.filter(c=>!c.email).length;
+      showText(d==="y"?"Yes \u2014 emails":"Maybe \u2014 emails",
+        `${list.length} candidate${list.length===1?"":"s"}${missing?` \u00B7 ${missing} have no email on file`:""}. Paste into the To: line.`,
+        list.map(c=>c.email||`(no email: ${c.name})`).join(", "));
+      return;
+    }
+  }
+});
+
+function commitMajor(){
+  const inp = document.getElementById("majIn");
+  if (!inp || !local.cand) return;
+  const c = cands().find(x => x.key === local.cand); if (!c) return;
+  const v = normMajor(inp.value);
+  if (c.major !== v) setField(c, "major", v);
+}
+function commitComment(){
+  const inp = document.getElementById("cmtIn");
+  if (!inp || !local.cand) return;
+  const c = cands().find(x => x.key === local.cand); if (!c) return;
+  if ((c.comments[local.me]||"") !== inp.value.trim()) setComment(c, inp.value);
+}
+document.addEventListener("change", e => {
+  if (e.target.id === "cmtIn") commitComment();
+  if (e.target.id === "majIn") commitMajor();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.target.id === "cmtIn"){ e.target.blur(); }
+});
+
+/* other writers' edits land here */
+document.addEventListener("claude:edit", () => {
+  const busy = document.activeElement;
+  if (busy && (busy.id === "cmtIn" || busy.id === "majIn")) return;   // don't yank a field mid-type
+  render();
+});
+document.addEventListener("claude:sync-off", () => { mode = "readonly"; render(); });
+document.addEventListener("claude:sync-lost", e => { lostCount = (e.detail && e.detail.count) || lostCount + 1; render(); });
+
+/* ================= BOOT ================= */
+(async () => {
+  const dlist = document.getElementById("majorList");
+  if (dlist && !dlist.children.length)
+    dlist.innerHTML = MAJORS.map(m => `<option value="${esc(m)}"></option>`).join("");
+  render();
+  try {
+    if (window.claude && typeof window.claude.use === "function"){
+      art = await window.claude.use("artifact");
+      dl  = await window.claude.use("downloads");
+      if (art){
+        try { await art.sync(() => {}); mode = "shared"; }
+        catch(err){
+          const c = err && err.code;
+          mode = (c === "not_writer" || c === "not_granted" || c === "consent_required" ||
+                  c === "not_declared" || c === "capability_disabled") ? "readonly"
+               : (c === "invalid_content") ? "solo" : "shared";
+        }
+      }
+    }
+  } catch(e){ /* keep going in solo mode */ }
+
+  /* Not syncing and nothing loaded? Put this device's own copy back.
+     Only ever in solo mode: on a live doc, markup a script restores with no
+     gesture behind it would switch syncing off for the roster. */
+  if (mode === "solo" && !roster.children.length){
+    try {
+      const m = JSON.parse(localStorage.getItem("guideroom.mirror.v1") || "null");
+      if (m && m.html){
+        roster.innerHTML = m.html;
+        restored = new Date(m.at).toLocaleString([], {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"});
+      }
+    } catch(e){}
+  }
+  render();
+})();
+})();
+</script>
